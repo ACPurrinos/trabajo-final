@@ -35,12 +35,15 @@ const Detail = () => {
     }, [id]);
 
    
+
+   
   return (
     <div>
       <img src={libro.url_imagen}/>
       <h1>{libro.titulo}</h1>
       <h4>{libro.autor}</h4>
       <h4>Precio: $  {libro.precio_$}</h4>
+      {/* <h4>Categoria = {}</h4> */}
       <h4>Cantidad de páginas: {libro.nro_paginas}</h4>
       <h4>Peso: {libro.peso} gramos </h4>
       <h4>Fecha de publicacion: {libro.fecha_publicacion}</h4>
