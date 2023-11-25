@@ -12,6 +12,7 @@ function ListadoDeProductos(props) {
             return(
             <DetalleDeProducto
             key = {libro.id}
+            id = {libro.id}
             titulo = {libro.titulo}
             autor={libro.autor}
             precio_$={libro.precio_$}

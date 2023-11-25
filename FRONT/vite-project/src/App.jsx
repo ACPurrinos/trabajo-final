@@ -6,6 +6,8 @@ import SearchBar from './components/SearchBar/SearchBar'
 // import libros, {Libro} from './data.js';
 import { Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Detail from './Views/Detail';
+import PATHROUTES from './helpers/PathRoutes.helper';
 
 
 function App() {
@@ -46,6 +48,8 @@ function App() {
 
 
 <Route path={"/"} element={ <ListadoDeProductos libros={libros}></ListadoDeProductos>}></Route>
+<Route path={'/detail/:id'} element={<Detail/>}/>
+
 
 </Routes>
 

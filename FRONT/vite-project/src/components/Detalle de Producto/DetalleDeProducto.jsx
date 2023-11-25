@@ -1,8 +1,12 @@
 import React from 'react'
-import ListadoDeProductos from '../Listado de Productos/ListadoDeProductos';
+import { Link } from 'react-router-dom';
+
 
 function DetalleDeProducto(props) {
-    const {titulo, autor, precio_$, editorial, categoria, año_publicacion} = props;
+  
+  
+    const {id, titulo, autor, precio_$, editorial, categoria, año_publicacion} = props;
+    console.log(id)
 
   return (
     <div>
@@ -12,7 +16,10 @@ function DetalleDeProducto(props) {
         <h5>Editorial: {editorial}</h5>
         {/* <h5>Categoria: {categoria}</h5> */}
         <h5>Año de publicación: {año_publicacion}</h5>
+
+        <Link  to={`/detail/${id}`}>
         <button>Ver detalle</button>
+        </Link>
         <hr></hr>
 
 
