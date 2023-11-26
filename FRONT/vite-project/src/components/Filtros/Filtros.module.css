@@ -1,0 +1,44 @@
+/* Filtros.module.css */
+.container {
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    background-color: #fff; 
+    border-bottom: 1px solid #ccc; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+    z-index: 1000; 
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inputCategoria {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    color: #ffffff;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+    width: 50%;
+    max-width: 600px;
+}
+
+.inputCategoria:focus {
+    border-color: #007bff;
+}
+
+.inputCategoria::placeholder {
+    color: #888;
+}
+
+.slider {
+    margin: 0 20px;
+}
+
+.precioLabel {
+    color: #333;
+    font-size: 16px;
+}
+

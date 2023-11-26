@@ -1,61 +1,65 @@
-
 import './App.css'
 
 import ListadoDeProductos from './components/Listado de Productos/ListadoDeProductos';
 import SearchBar from './components/SearchBar/SearchBar'
-// import libros, {Libro} from './data.js';
 import { Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Detail from './Views/Detail';
+import Navbar from './components/NavBar/NavBar';
 import PATHROUTES from './helpers/PathRoutes.helper';
 
+import Filtros from './components/Filtros/Filtros';
 
 function App() {
 
-  const [libros, setLibros] = useState([])
+  const [libros, setLibros] = useState([]);
+  const [librosFiltrados, setLibrosFiltrados] = useState([]);
 
+  // Obtener los libros al cargar el componente
   useEffect(() => {
-   fetch('http://localhost:3000')
-   .then((response)=>response.json())
-   .then((data) => {
-      if (data) setLibros(data)
-   });
- return setLibros([])
-  }, [])
+    fetch('http://localhost:3000')
+      .then((response) => response.json())
+      .then((data) => {
+        setLibros(data);
+        setLibrosFiltrados(data);
+      });
+  }, []);
 
-//   const libros = []
+  const onPriceChange = (nuevoPrecio) => {
+    fetch(`http://localhost:3000/?precio_$=${nuevoPrecio}`)
+        .then(response => response.json())
+        .then(data => {
+            setLibrosFiltrados(data);
+        })
+        .catch(error => console.error('Error:', error));
+};
 
-
-//    fetch(`http://localhost:3000`)
-// .then((response)=>response.json())
-// .then((data)=>{
- 
-// data.map((libro) => libros.push(libro))
-// return libros
-
-// })
-   
+  // Manejar el cambio de filtro
+  const handleFilterChange = (categoria) => {
+    const queryParams = new URLSearchParams();
+    if (categoria) {
+      queryParams.append('categoria', categoria);
+    }
+    
+    fetch(`http://localhost:3000/?${queryParams.toString()}`)
+      .then(response => response.json())
+      .then(data => {
+        setLibrosFiltrados(data);
+      })
+      .catch(error => console.error('Error:', error));
+  };
 
 
   return (
-
     <div>
- <SearchBar></SearchBar>
+      <Navbar/> 
+      <SearchBar />
+      <Filtros onFilterChange={handleFilterChange} onPriceChange={onPriceChange} />
 
-
-<Routes>
-{/* <Route path={"/"} element={ <ListadoDeProductos data={data} ></ListadoDeProductos>}></Route>  */}
-
-
-<Route path={"/"} element={ <ListadoDeProductos libros={libros}></ListadoDeProductos>}></Route>
-<Route path={'/detail/:id'} element={<Detail/>}/>
-
-
-</Routes>
-
-     
-      
-     
+      <Routes>
+        <Route path={"/"} element={<ListadoDeProductos libros={librosFiltrados} />} />
+        <Route path={'/detail/:id'} element={<Detail/>}/>
+      </Routes>
     </div>
   )
 } 
