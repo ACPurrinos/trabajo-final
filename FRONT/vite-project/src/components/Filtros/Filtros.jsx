@@ -21,14 +21,21 @@ const Filtros = ({ onFilterChange, onPriceChange }) => {
 
     return (
         <div className={styles.container}>
-            <input 
-                type="text" 
-                name="categoria" 
+            <select
+                name="categoria"
                 className={styles.inputCategoria}
-                value={categoria} 
-                onChange={handleCategoriaChange} 
-                placeholder="Categoría" 
-            />
+                value={categoria}
+                onChange={handleCategoriaChange}
+            >
+                <option value="">Selecciona una categoría</option>
+                <option value="Arte">Arte</option>
+                <option value="Computacion y Tecnologia">Computacion y Tecnologia</option>
+                <option value="Ficcion romantica">Ficcion romantica</option>
+                <option value="Economia y Finanzas">Economia y Finanzas</option>
+                <option value="Infantil y Juvenil">Infantil y Juvenil</option>
+                <option value="Historia de America">Historia de America</option>
+                <option value="Divulgacion cientifica">Divulgacion cientifica</option>
+            </select>
             
             {/* Control deslizador para el precio */}
             <input
