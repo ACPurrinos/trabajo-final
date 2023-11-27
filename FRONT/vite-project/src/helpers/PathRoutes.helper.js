@@ -1,5 +1,6 @@
 const PATHROUTES ={
-    DETAIL:'/detail/:id'
+    DETAIL:'/detail/:id',
+  
     
 }
 

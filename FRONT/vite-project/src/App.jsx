@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import Detail from './Views/Detail';
 import Navbar from './components/NavBar/NavBar';
 import PATHROUTES from './helpers/PathRoutes.helper';
+// import FormAdminLogin from './components/FormAdminLogin/FormAdminLogin';
 
 import Filtros from './components/Filtros/Filtros';
 
@@ -59,6 +60,7 @@ function App() {
       <Routes>
         <Route path={"/"} element={<ListadoDeProductos libros={librosFiltrados} />} />
         <Route path={'/detail/:id'} element={<Detail/>}/>
+       
       </Routes>
     </div>
   )
