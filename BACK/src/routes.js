@@ -6,6 +6,7 @@ const createCategoria = require("./controllers/createCategoria");
 const createProducto = require("./controllers/createProducto");
 const findAllProductos = require("./controllers/findAllProductos");
 const getProductoById = require('./controllers/getProductoById');
+const getAllCategorias = require('./controllers/getAllCategorias')
 // const bodyParser =require('body-parser');
 const router = Router();
 router.use(express.json());
@@ -20,5 +21,7 @@ router.get("/categoria", findAllCategorias);
 router.post("/categoria", createCategoria);
 
 router.get("/detail/:id", getProductoById);
+
+router.get("/categorias", getAllCategorias );
 
 module.exports = router;
