@@ -1,0 +1,47 @@
+.table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .header {
+    background-color: #f2f2f2;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .cell {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  /* Estilo para el botón "Editar" */
+  .editButton {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  /* Estilo para el botón "Eliminar" */
+  .deleteButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+  }

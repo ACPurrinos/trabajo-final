@@ -1,6 +1,7 @@
 const PATHROUTES ={
     DETAIL:'/detail/:id',
-    PANELADMINISTRADOR: '/administrador'
+    ADMINISTRADOR: '/administrador',
+    FORMPRODUCTOS: '/administrador/formulario'
   
     
 }

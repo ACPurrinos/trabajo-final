@@ -8,8 +8,10 @@ import Detail from './Views/Detail';
 import Navbar from './components/NavBar/NavBar';
 import PATHROUTES from './helpers/PathRoutes.helper';
 import PanelAdministrador from './components/PanelAdministrador/PanelAdministrador';
+import DashboardAdmin from './Views/DashboardAdmin';
 
 import Filtros from './components/Filtros/Filtros';
+import { Dashboard } from '@mui/icons-material';
 
 function App() {
 
@@ -60,7 +62,8 @@ function App() {
       <Routes>
         <Route path={"/"} element={<ListadoDeProductos libros={librosFiltrados} />} />
         <Route path={'/detail/:id'} element={<Detail/>}/>
-        <Route path={PATHROUTES.PANELADMINISTRADOR} element={<PanelAdministrador/>}/>
+        <Route path={PATHROUTES.ADMINISTRADOR} element={<DashboardAdmin/>}/>
+        <Route path={PATHROUTES.FORMPRODUCTOS} element={<PanelAdministrador/>}/>
        
       </Routes>
     </div>
