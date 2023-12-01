@@ -18,5 +18,5 @@ module.exports=(sequelize)=>{
        url_imagen:{type:DataTypes.STRING}
     
     }
-    )
+    ) 
     };

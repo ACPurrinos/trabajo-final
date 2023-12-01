@@ -1,21 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import styles from './Filtros.module.css';
 
-const Filtros = ({ onFilterChange, onPriceChange }) => {
+const Filtros = ({ onFilterChange, onPriceChange, onSortChange, precioMax }) => {
+    const [categorias, setCategorias] = useState([]);
     const [categoria, setCategoria] = useState('');
-    const [precio, setPrecio] = useState(100);
+    const [precio, setPrecio] = useState(precioMax || 100);
+
+    useEffect(() => {
+        if (typeof precioMax === 'number' && !isNaN(precioMax)) {
+            setPrecio(precioMax);
+        }
+    }, [precioMax]);
+
+    // Función para cargar las categorías desde el backend
+    useEffect(() => {
+        fetch('http://localhost:3000/categorias')
+            .then(response => response.json())
+            .then(data => setCategorias(data))
+            .catch(error => console.error('Error al cargar categorías:', error));
+    }, []);
 
     const handleCategoriaChange = (e) => {
-        setCategoria(e.target.value);
+        const nuevaCategoria = e.target.value;
+        setCategoria(nuevaCategoria);
         if (onFilterChange) {
-            onFilterChange(e.target.value);
+            onFilterChange(nuevaCategoria, precio);
         }
     };
 
     const handlePrecioChange = (e) => {
-        setPrecio(e.target.value);
+        const nuevoPrecio = e.target.value;
+        setPrecio(nuevoPrecio);
         if (onPriceChange) {
-            onPriceChange(e.target.value);
+            onPriceChange(nuevoPrecio, categoria);
+        }
+    };
+
+    const handleSortChange = (e) => {
+        if (onSortChange) {
+            onSortChange(e.target.value);
         }
     };
 
@@ -28,30 +51,36 @@ const Filtros = ({ onFilterChange, onPriceChange }) => {
                 onChange={handleCategoriaChange}
             >
                 <option value="">Selecciona una categoría</option>
-                <option value="Arte">Arte</option>
-                <option value="Computacion y Tecnologia">Computacion y Tecnologia</option>
-                <option value="Ficcion romantica">Ficcion romantica</option>
-                <option value="Economia y Finanzas">Economia y Finanzas</option>
-                <option value="Infantil y Juvenil">Infantil y Juvenil</option>
-                <option value="Historia de America">Historia de America</option>
-                <option value="Divulgacion cientifica">Divulgacion cientifica</option>
+                {categorias.map((cat) => (
+                    <option key={cat.id} value={cat.nombre}>{cat.nombre}</option>
+                ))}
             </select>
             
             {/* Control deslizador para el precio */}
+            <label  className={styles.sliderLabel}>
+                Ajustar precio
+            </label>
             <input
                 type="range"
                 name="precio_$"
                 className={styles.slider}
                 min="0"
-                max="1000"
+                max={precioMax}
                 value={precio}
                 onChange={handlePrecioChange}
             />
             <span className={styles.precioLabel}>${precio}</span>
+            {/* Control para el ordenamiento */}
+            <select
+                name="ordenamiento"
+                className={styles.inputOrdenamiento}
+                onChange={handleSortChange}
+            >
+                <option value="precio_asc">Precio: Menor a Mayor</option>
+                <option value="precio_desc">Precio: Mayor a Menor</option>
+            </select>
         </div>
     );
 };
 
 export default Filtros;
-
-

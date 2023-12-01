@@ -3,11 +3,10 @@ const { Op } = require("sequelize");
 
 const findAllProductos = async (req, res) => {
     try {
-        // Extraer los parámetros de categoría y precio de la solicitud
         const categoriaNombre = req.query.categoria;
         const precioMax = req.query.precio;
+        const ordenamiento = req.query.ordenamiento; // Agregar el parámetro de ordenamiento
 
-        // Condición inicial: incluir categoría en todas las consultas
         let condiciones = {
             include: [{
                 model: Categoria,
@@ -16,19 +15,29 @@ const findAllProductos = async (req, res) => {
             }]
         };
 
-        // Agregar condición de filtrado por categoría, si se proporciona
         if (categoriaNombre) {
             condiciones.include[0].where = { nombre: categoriaNombre };
         }
 
-        // Agregar condición de filtrado por precio, si se proporciona
         if (precioMax) {
             condiciones.where = { 
                 precio_$: { [Op.lte]: precioMax }
             };
         }
 
-        // Realizar la consulta con las condiciones
+        // Agregar lógica de ordenamiento
+        if (ordenamiento) {
+            switch (ordenamiento) {
+                case 'precio_asc':
+                    condiciones.order = [['precio_$', 'ASC']];
+                    break;
+                case 'precio_desc':
+                    condiciones.order = [['precio_$', 'DESC']];
+                    break;
+                // Puedes agregar más casos si hay otros criterios de ordenamiento
+            }
+        }
+
         const productos = await Producto.findAll(condiciones);
 
         return res.status(200).json(productos);
@@ -36,6 +45,5 @@ const findAllProductos = async (req, res) => {
         res.status(500).json(error.message);
     }
 };
-
 
 module.exports = findAllProductos; 

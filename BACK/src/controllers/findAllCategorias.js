@@ -18,7 +18,6 @@ const findAllProductos = async (req, res) => {
             opciones.include[0].where = { nombre: filtroCategoria };
         }
 
-        // Aquí puedes añadir más lógica de filtrado si lo necesitas
 
         const productos = await Producto.findAll(opciones);
         return res.status(200).json(productos);

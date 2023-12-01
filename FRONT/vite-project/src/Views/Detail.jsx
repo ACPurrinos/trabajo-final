@@ -1,59 +1,100 @@
-import React, { useEffect, useState } from 'react'
-import App from '../App'
-// import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import React, { useState, useContext } from 'react';
+import { Card, CardHeader, CardMedia, CardContent, CardActions, IconButton, Typography, Grid, Tooltip } from '@mui/material';
+import { AddShoppingCart, ExpandMore as ExpandMoreIcon, RemoveShoppingCart } from '@mui/icons-material';
+import accounting from 'accounting';
+import Collapse from '@mui/material/Collapse';
+import { CarritoContext } from '../providers/carritoContext.jsx';
 
-const Detail = () => {
+const Detail = (props) => {
+  const { titulo, autor, precio_$, url_imagen, nro_paginas, peso, fecha_publicacion, ISBN, editorial, idioma, descripcion, id } = props;
+  const [expanded, setExpanded] = useState(false);
+  const { carrito, agregarAlCarrito, removerDelCarrito } = useContext(CarritoContext);
+  const estaEnCarrito = carrito.some(item => item.id === id);
 
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
-    const { id } = useParams();
-    console.log({id})
+  const manejarAgregarAlCarrito = () => {
+    agregarAlCarrito({ id, titulo, precio_$ });
+  };
 
-    // const id = useParams.id;
-    
-    const [libro, setLibro] = useState({});
+  const manejarRemoverDelCarrito = () => {
+    removerDelCarrito(id);
+  };
 
-    useEffect(() => {
-      // Utiliza fetch para obtener los datos del servidor
-      fetch(`http://localhost:3000/detail/${id}`)
-      // fetch('http://localhost:3000/detail/:id')
-        .then(response => response.json())
-        .then(data => {
-          if (data.titulo) {
-            setLibro(data);
-          } else {
-            window.alert('No hay libros con ese ID');
-          }
-        })
-        .catch(error => {
-          console.error('Error al obtener datos:', error);
-          window.alert('Ocurrió un error al obtener datos del servidor.');
-        });
-
-      // Limpia el estado al desmontar el componente
-      return () => setLibro({});
-    }, [id]);
-
-   
-
-   
   return (
     <div>
-      <img src={libro.url_imagen}/>
-      <h1>{libro.titulo}</h1>
-      <h4>{libro.autor}</h4>
-      <h4>Precio: $  {libro.precio_$}</h4>
-      {/* <h4>Categoria = {}</h4> */}
-      <h4>Cantidad de páginas: {libro.nro_paginas}</h4>
-      <h4>Peso: {libro.peso} gramos </h4>
-      <h4>Fecha de publicacion: {libro.fecha_publicacion}</h4>
-      <h4>ISBN: {libro.ISBN}</h4>
-      <h4>Editorial: {libro.editorial}</h4>
-      <h4>Idioma: {libro.idioma}</h4>
-      <h3>Descripción: {libro.descripcion} </h3>
+      <Card sx={{ maxWidth: 500, width: '100%' }}>
+        <Grid container>
+          <Grid item xs={12} sm={6}>
+            <CardMedia
+              component="img"
+              height="400"
+              width="700"
+              image={url_imagen}
+              alt="Portada del libro"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CardContent>
+              <CardHeader
+                title={titulo}
+                subheader={autor}
+              />
+              <Typography variant='h5' color='textSecondary'>
+                {accounting.formatMoney(precio_$, { precision: 0 })}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <br />
+                Cantidad de páginas: {nro_paginas}
+                <br />
+                Peso: {peso} gramos
+                <br />
+                Fecha de publicación: {fecha_publicacion}
+                <br />
+                ISBN: {ISBN}
+                <br />
+                Editorial: {editorial}
+                <br />
+                Idioma: {idioma}
+              </Typography>
+            </CardContent>
+            <CardActions disableSpacing>
+              {estaEnCarrito ? (
+                <Tooltip title="Quitar del carrito">
+                  <IconButton aria-label="remove from cart" onClick={manejarRemoverDelCarrito}>
+                    <RemoveShoppingCart fontSize='large' />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip title="Agregar al carrito">
+                  <IconButton aria-label="add to cart" onClick={manejarAgregarAlCarrito}>
+                    <AddShoppingCart fontSize='large' />
+                  </IconButton>
+                </Tooltip>
+              )}
+              <IconButton
+                onClick={handleExpandClick}
+                aria-expanded={expanded}
+                aria-label="show more"
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            </CardActions>
+          </Grid>
+        </Grid>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <Typography >Argumento:</Typography>
+            <Typography >
+               {descripcion}
+            </Typography>
+          </CardContent>
+        </Collapse>
+      </Card>
+    </div>
+  );
+};
 
-    </div>)
-
-}
-
-export default Detail
+export default Detail;

@@ -5,6 +5,7 @@ const router =require("./routes");
 
 const server = express();
 server.use(express.json());
+server.use(express.urlencoded({extended: true}))
 server.use(cors());
 server.use(morgan("dev"));
 server.use((req,res, next)=>{
@@ -12,7 +13,7 @@ server.use((req,res, next)=>{
     next();
 });
 
-server.use(router);
+server.use(router); 
 
 
 module.exports = server;

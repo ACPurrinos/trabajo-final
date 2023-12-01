@@ -7,6 +7,6 @@ sequelize.sync({alter:true})
         console.log("Server listening on port 3000");
     });
 })
-.catch((err)=>console.log(err));
+.catch((err)=>console.log(err)); 
 
 
