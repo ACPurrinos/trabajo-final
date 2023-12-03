@@ -31,4 +31,5 @@ module.exports ={
    
    sequelize, 
 ...sequelize.models,
+Sequelize
 };

@@ -1,7 +1,11 @@
 const PATHROUTES ={
     DETAIL:'/detail/:id',
     ADMINISTRADOR: '/administrador',
-    FORMPRODUCTOS: '/administrador/formulario'
+    FORMPRODUCTOS: '/administrador/nuevo-producto',
+    VERPRODUCTOS: '/administrador/mis-productos',
+    FORMCATEGORIA: '/administrador/nueva-categoria',
+    VERCATEGORIAS: '/administrador/mis-categorias',
+    EDITARPRODUCTO: '/editar-producto/:id'
   
     
 }

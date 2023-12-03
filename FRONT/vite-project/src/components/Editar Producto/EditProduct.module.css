@@ -1,0 +1,19 @@
+.error{
+    color: red;
+}
+
+.formGroup {
+    margin-bottom: 15px;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  
+  .checkbox {
+    margin: 8px 0;
+  }

@@ -9,9 +9,14 @@ import Navbar from './components/NavBar/NavBar';
 import PATHROUTES from './helpers/PathRoutes.helper';
 import PanelAdministrador from './components/PanelAdministrador/PanelAdministrador';
 import DashboardAdmin from './Views/DashboardAdmin';
+import FormCategoria from './components/FormCategoria/FormCategoria';
 
 import Filtros from './components/Filtros/Filtros';
 import { Dashboard } from '@mui/icons-material';
+import ProductTable from './components/ProductTable/ProductTable';
+import VerCategorias from './components/Ver Categorias/VerCategorias';
+import EditProduct from './components/Editar Producto/EditProduct';
+
 
 function App() {
 
@@ -30,12 +35,12 @@ function App() {
 
   const onPriceChange = (nuevoPrecio) => {
     fetch(`http://localhost:3000/?precio_$=${nuevoPrecio}`)
-        .then(response => response.json())
-        .then(data => {
-            setLibrosFiltrados(data);
-        })
-        .catch(error => console.error('Error:', error));
-};
+      .then(response => response.json())
+      .then(data => {
+        setLibrosFiltrados(data);
+      })
+      .catch(error => console.error('Error:', error));
+  };
 
   // Manejar el cambio de filtro
   const handleFilterChange = (categoria) => {
@@ -43,7 +48,7 @@ function App() {
     if (categoria) {
       queryParams.append('categoria', categoria);
     }
-    
+
     fetch(`http://localhost:3000/?${queryParams.toString()}`)
       .then(response => response.json())
       .then(data => {
@@ -55,19 +60,74 @@ function App() {
 
   return (
     <div>
-      <Navbar/> 
+      <Navbar />
       <SearchBar />
       <Filtros onFilterChange={handleFilterChange} onPriceChange={onPriceChange} />
 
       <Routes>
         <Route path={"/"} element={<ListadoDeProductos libros={librosFiltrados} />} />
-        <Route path={'/detail/:id'} element={<Detail/>}/>
-        <Route path={PATHROUTES.ADMINISTRADOR} element={<DashboardAdmin/>}/>
-        <Route path={PATHROUTES.FORMPRODUCTOS} element={<PanelAdministrador/>}/>
-       
+        <Route path={'/detail/:id'} element={<Detail />} />
+        <Route path={PATHROUTES.ADMINISTRADOR} element={<DashboardAdmin />} />
+
+        <Route path={PATHROUTES.FORMPRODUCTOS} 
+        element={
+          <>
+            <DashboardAdmin />
+            <PanelAdministrador />
+          </>
+        }
+        />
+
+        <Route
+          path={PATHROUTES.VERPRODUCTOS}
+          element={
+            <>
+              <DashboardAdmin />
+              <ProductTable />
+            </>
+          }
+        />
+
+        <Route
+          path={PATHROUTES.FORMCATEGORIA}
+          element={
+            <>
+              <DashboardAdmin />
+              <FormCategoria />
+            </>
+          }
+        />
+
+
+
+        <Route
+          path={PATHROUTES.VERCATEGORIAS}
+          element={
+            <>
+              <DashboardAdmin />
+              <VerCategorias />
+            </>
+          }
+        />
+
+        <Route
+          path={PATHROUTES.EDITARPRODUCTO}
+          element={
+            <>
+              <DashboardAdmin />
+              <EditProduct />
+            </>
+          }
+        />
+
       </Routes>
     </div>
+
+
+
+
+
   )
-} 
+}
 
 export default App

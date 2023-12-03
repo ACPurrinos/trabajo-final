@@ -1,62 +1,29 @@
-import React, { useState } from 'react';
-import PanelAdministrador from '../components/PanelAdministrador/PanelAdministrador';
-import ProductTable from '../components/ProductTable/ProductTable';
+
+
+import React from 'react';
+import { Link } from 'react-router-dom'; 
+import { AppBar, Toolbar, Button } from '@mui/material';
 import styles from './DashboardAdmin.module.css';
-import { Link } from 'react-router-dom';
+import PATHROUTES from '../helpers/PathRoutes.helper';
 
 const DashboardAdmin = () => {
-  const [selectedOption, setSelectedOption] = useState(null);
-
-  const handleButtonClick = (option) => {
-    setSelectedOption(option);
-
-    switch (option) {
-      case 'crearProducto':
-        console.log('Crear Producto');
-     
-        break;
-
-      case 'crearCategoria':
-        console.log('Crear Categoría');
-    
-        break;
-
-      case 'filtrarProducto':
-        console.log('Filtrar por nombre');
-
-        break;
-
-      case 'verProductos':
-  
-        break;
-
-      default:
-        console.log('Selecciona una opción');
-    }
-  };
-
   return (
-    <div>
-      <div>
-        <label>Selecciona una opción:</label>
-        <div>
-          <button onClick={() => handleButtonClick('crearProducto')}>Crear Producto</button>
-          <button onClick={() => handleButtonClick('crearCategoria')}>Crear Categoría</button>
-          <button onClick={() => handleButtonClick('filtrarProducto')}>Filtrar por nombre</button>
-          <button onClick={() => handleButtonClick('verProductos')}>Ver mis productos</button>
-        </div>
-      </div>
-
-  
-      {selectedOption === 'crearProducto' && (
-        <Link to="/administrador/formulario">
-          <PanelAdministrador />
-        </Link>
-      )}
-
-  
-      {selectedOption === 'verProductos' && <ProductTable />}
-    </div>
+    <AppBar position="static">
+      <Toolbar className={styles.toolbar}>
+        <Button component={Link} to={PATHROUTES.FORMPRODUCTOS} color="inherit" className={styles.button}>
+          Alta de Producto
+        </Button>
+        <Button component={Link} to={PATHROUTES.FORMCATEGORIA} color="inherit" className={styles.button}>
+          Alta de Categoria
+        </Button>
+        <Button component={Link} to={PATHROUTES.VERPRODUCTOS} color="inherit" className={styles.button}>
+          Ver Mis Productos
+        </Button>
+        <Button component={Link} to={PATHROUTES.VERCATEGORIAS} color="inherit" className={styles.button}>
+          Ver Mis Categorias
+        </Button>
+      </Toolbar>
+    </AppBar>
   );
 };
 

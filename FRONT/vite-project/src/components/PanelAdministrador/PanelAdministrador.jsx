@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import styles from './PanelAdministrador.module.css';
+
 
 const PanelAdministrador = () => {
   const [producto, setProducto] = useState({
@@ -21,6 +21,8 @@ const PanelAdministrador = () => {
 
 
   const [categorias, setCategorias] = useState([]);
+  const [isbnExists, setIsbnExists] = useState(false);
+  const [guardadoExitoso, setGuardadoExitoso] = useState(false);
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -44,21 +46,13 @@ const PanelAdministrador = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setProducto({ ...producto, [name]: value });
+    if (name === 'ISBN') {
+      checkIsbnExists(value);
+      console.log(value)
+    }
   };
 
 
-//   const handleInputChange = (event) => {
-//     const { name, value } = event.target;
-//     const updatedProducto = { ...producto, [name === 'precio_$' ? 'precio' : name]: value };
-  
-//   setProducto(updatedProducto);
-//     // setProducto({ ...producto, [name]: value });
-//   };
-
-//   const handleCategoriaChange = (event) => {
-//     const value = event.target.value;
-//     setProducto({ ...producto, categoria: value });
-//   };
 
   const handleCategoriaChange = (event) => {
     const value = event.target.value;
@@ -75,12 +69,110 @@ const PanelAdministrador = () => {
     setProducto({ ...producto, categoria: updatedCategorias });
   };
 
-  const handleSubmit = (event) => {
+
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  
+  //   if (producto.ISBN.length === 13) {
+  //     checkIsbnExists(producto.ISBN);
+  //     if (!isbnExists) {
+  //       window.confirm('Dar de alta el producto:' + producto.ISBN);
+  //       await postData();
+  //     } else {
+  //       window.alert('ISBN ya existe en la base de datos');
+  //     }
+  //   } else {
+  //     window.alert('El ISBN debe tener 13 dígitos');
+  //   }
+  
+  //   console.log('Datos del libro', producto);
+  // };
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  
+  //   if (producto.ISBN.length === 13) {
+  //     checkIsbnExists(producto.ISBN);
+  //     if (!isbnExists) {
+  //       await postData();
+  //       // Restablecer el estado del formulario
+  //       setProducto({
+  //         titulo: '',
+  //         autor: '',
+  //         precio_$: 0,
+  //         nro_paginas: 0,
+  //         peso: 0,
+  //         fecha_publicacion: '', 
+  //         ISBN: '',
+  //         editorial: '',
+  //         idioma: '',
+  //         descripcion: '',
+  //         stock: false,
+  //         url_imagen: '',
+  //         categoria: []
+  //       });
+  //       // Mostrar un mensaje de éxito al usuario
+  //       alert('Producto guardado exitosamente');
+  //     } else {
+  //       window.alert('ISBN ya existe en la base de datos');
+  //     }
+  //   } else {
+  //     window.alert('El ISBN debe tener 13 dígitos');
+  //   }
+  
+  //   console.log('Datos del libro', producto);
+  // };
+  
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    postData(); 
-    console.log('Producto seleccionado:', producto);
-  }
-   
+  
+    if (producto.ISBN.length === 13) {
+      checkIsbnExists(producto.ISBN);
+      if (!isbnExists) {
+        await postData();
+        // Restablecer el estado del formulario
+        setProducto({
+          titulo: '',
+          autor: '',
+          precio_$: 0,
+          nro_paginas: 0,
+          peso: 0,
+          fecha_publicacion: '', 
+          ISBN: '',
+          editorial: '',
+          idioma: '',
+          descripcion: '',
+          stock: false,
+          url_imagen: '',
+          categoria: []
+        });
+        // Mostrar un mensaje de éxito al usuario
+        setGuardadoExitoso(true);
+      } else {
+        window.alert('ISBN ya existe en la base de datos');
+      }
+    } else {
+      window.alert('El ISBN debe tener 13 dígitos');
+    }
+  
+    console.log('Datos del libro', producto);
+  };
+ 
+  const checkIsbnExists = async (isbn) => {
+    const isbnString = String(isbn);
+
+    const url = `http://localhost:3000/producto/check?isbn=${isbnString}`; // Reemplaza con tu endpoint real
+    
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+      const data = await response.json();
+      setIsbnExists(data.exists);
+    } catch (error) {
+      console.error('Error al verificar el ISBN:', error.message);
+    }
+  };
 
     const postData = async () => {
         const url = 'http://localhost:3000';       
@@ -152,32 +244,6 @@ const PanelAdministrador = () => {
           />
         </div>
 
-        {/* <div className={styles.formGroup}>
-          <label htmlFor="precio">Precio:</label>
-          <input
-            type="number"
-            id="precio"
-            name="precio"
-            value={producto.precio_$}
-            onChange={handleInputChange}
-            required
-            className={styles.input}
-          />
-        </div> */}
-
-        {/* <div className={styles.formGroup}>
-  <label htmlFor="precio">Precio:</label>
-  <input
-    type="number"
-    id="precio_$"
-    name="precio_$"  // Cambia el name a "precio"
-    const nuevoPrecio ={producto.precio_$}
-    value= {nuevoPrecio}
-    onChange={handleInputChange}
-    required
-    className={styles.input}
-  />
-</div> */}
 
 <div className={styles.formGroup}>
           <label htmlFor="precio_$">Precio:</label>
@@ -201,6 +267,7 @@ const PanelAdministrador = () => {
             value={producto.nro_paginas}
             onChange={handleInputChange}
             className={styles.input}
+            required
           />
         </div>
 
@@ -240,7 +307,13 @@ const PanelAdministrador = () => {
             onChange={handleInputChange}
             required
             className={styles.input}
-          />
+            />
+            {producto.ISBN.length !== 13 && (
+      <span className={styles.error}>El ISBN debe tener 13 dígitos</span>
+    )}
+    {isbnExists && (
+      <span className={styles.error}>El ISBN ya existe en la base de datos</span>
+    )}
         </div>
 
         <div className={styles.formGroup}>
@@ -256,18 +329,30 @@ const PanelAdministrador = () => {
           />
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="idioma">Idioma:</label>
-          <input
-            type="text"
-            id="idioma"
-            name="idioma"
-            value={producto.idioma}
-            onChange={handleInputChange}
-            required
-            className={styles.input}
-          />
-        </div>
+      
+
+
+<div className={styles.formGroup}>
+  <label htmlFor="idioma">Idioma:</label>
+  <select
+    id="idioma"
+    name="idioma"
+    value={producto.idioma}
+    onChange={handleInputChange}
+    required
+    className={styles.input}
+    >
+    <option value="">Selecciona una categoría</option>
+    <option value="Castellano">Castellano</option>
+    <option value="Inglés">Inglés</option>
+    <option value="Aleman">Alemán</option>
+    <option value="Latin">Latín</option>
+    <option value="Frances">Francés</option>
+    <option value="Hebreo">Hebreo</option>
+    <option value="Otro">Otro</option>
+  </select>
+</div>
+
 
         <div className={styles.formGroup}>
           <label htmlFor="descripcion">Descripción:</label>
@@ -289,7 +374,7 @@ const PanelAdministrador = () => {
             name="categoria"
             value={producto.categoria}
             onChange={handleCategoriaChange}
-            className={styles.select}
+            className={styles.input}
           >
             <option value="">Selecciona una categoría</option>
             {categorias.map((categoria) => (
@@ -322,12 +407,13 @@ const PanelAdministrador = () => {
             value={producto.url_imagen}
             onChange={handleInputChange}
             className={styles.input}
+            required
           />
         </div>
 
-        <button type="submit" className={styles.button}>
-          Guardar Producto
-</button>
+        <button type="submit" className={styles.button} disabled={isbnExists || producto.ISBN.length !== 13}>
+    Guardar Producto
+  </button>
 </form>
 </div>
 );
