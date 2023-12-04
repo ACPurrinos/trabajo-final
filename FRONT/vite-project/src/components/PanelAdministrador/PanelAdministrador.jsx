@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './PanelAdministrador.module.css';
+import axios from 'axios';
 
 
 const PanelAdministrador = () => {
@@ -23,6 +24,7 @@ const PanelAdministrador = () => {
   const [categorias, setCategorias] = useState([]);
   const [isbnExists, setIsbnExists] = useState(false);
   const [guardadoExitoso, setGuardadoExitoso] = useState(false);
+  const [urlImagen, setUrlImagen] = useState('');
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -95,6 +97,7 @@ const PanelAdministrador = () => {
           categoria: []
         });
         // Mostrar un mensaje de éxito al usuario
+        deleteImage();
         setGuardadoExitoso(true);
       } else {
         window.alert('ISBN ya existe en la base de datos');
@@ -162,7 +165,30 @@ const PanelAdministrador = () => {
     const precioValue = producto.precio_$;
 
 
+    const changeUploadImage = async (e) => {
+      const file = e.target.files[0];
+      const data = new FormData();
+  
+      data.append('file', file);
+      data.append('upload_preset', 'preset_libros');
+  
+      try {
+        const response = await axios.post('https://api.cloudinary.com/v1_1/.../image/upload', data);
+        console.log(response.data);
+        setProducto({ ...producto, url_imagen: response.data.secure_url });
+        setUrlImagen(response.data.secure_url);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    };
+  
+    const deleteImage = () => {
+      setUrlImagen('');
+    };
+
+
   return (
+
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
         <h2 className={styles.title}>Formulario de Producto</h2>
@@ -347,7 +373,7 @@ const PanelAdministrador = () => {
           />
         </div>
 
-        <div className={styles.formGroup}>
+        {/* <div className={styles.formGroup}>
           <label htmlFor="url_imagen">URL de Imagen:</label>
           <input
             type="text"
@@ -358,6 +384,29 @@ const PanelAdministrador = () => {
             className={styles.input}
             required
           />
+        </div> */}
+
+        <div className={styles.formGroup}>
+          <label htmlFor="url_imagen">Seleccionar Imagen:</label>
+          <input
+            type="file"
+            id="url_imagen"
+            name="url_imagen"
+            onChange={(e) => {
+              handleInputChange(e);
+              changeUploadImage(e);
+            }}
+            className={styles.input}
+            accept="image/*"
+            required
+          />
+          {urlImagen && (
+            <div>
+              <img src={urlImagen} alt="Imagen seleccionada" />
+              <span className={styles.imageURL}>{urlImagen}</span>
+              <button onClick={deleteImage}>Eliminar Imagen</button>
+            </div>
+          )}
         </div>
 
         <button type="submit" className={styles.button} disabled={isbnExists || producto.ISBN.length !== 13}>

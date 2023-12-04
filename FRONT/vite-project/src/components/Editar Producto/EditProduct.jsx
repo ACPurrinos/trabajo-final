@@ -10,6 +10,7 @@ import { FormControlLabel, Checkbox } from '@mui/material';
 const EditProduct = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
+  const [nuevaUrlDeCloudinary, setNuevaUrlDeCloudinary] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +49,39 @@ const EditProduct = () => {
     setProduct({
       ...product,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleNuevaImagenChange = async (e) => {
+    const file = e.target.files[0];
+    const data = new FormData();
+
+    data.append('file', file);
+    data.append('upload_preset', 'preset_libros');
+
+    // Lógica para subir la nueva imagen a Cloudinary
+    try {
+      const response = await fetch('https://api.cloudinary.com/v1_1/.../image/upload', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
+      const responseData = await response.json();
+      setNuevaUrlDeCloudinary(responseData.secure_url);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+  const handleEliminarImagen = () => {
+    // Lógica para eliminar la imagen actual de Cloudinary o tu servicio de almacenamiento
+   
+    setProduct({
+      ...product,
+      url_imagen: nuevaUrlDeCloudinary, // o null
     });
   };
 
@@ -248,8 +282,39 @@ const EditProduct = () => {
           />
         </div>
 
+<div>
+        <img src={product.url_imagen} alt="Imagen actual" />
+        {product.url_imagen && (
+          <button onClick={() => handleEliminarImagen()}>Eliminar Imagen Actual</button>
+        )}
+      </div>
+
+        <input
+  type="file"
+  id="nueva_imagen"
+  name="nueva_imagen"
+  onChange={(e) => handleNuevaImagenChange(e)}
+  accept="image/*"
+/>
+
+  
 
 <TextField
+        label="URL de Imagen"
+        id="url_imagen"
+        name="url_imagen"
+        type="text"
+        value={nuevaUrlDeCloudinary || product.url_imagen}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+        className={styles.input}
+        required
+      />
+
+
+
+{/* <TextField
   label="URL de Imagen"
   id="url_imagen"
   name="url_imagen"
@@ -260,7 +325,7 @@ const EditProduct = () => {
   margin="normal"
   className={styles.input}
   required
-/>
+/> */}
 
 
 
