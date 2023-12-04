@@ -27,7 +27,7 @@ const PanelAdministrador = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await fetch('http://localhost:3000/categorias'); 
+        const response = await fetch('http://localhost:3000/categorias-buscar-todas'); 
         if (!response.ok) {
           throw new Error('Error al obtener categorías.');
         }
@@ -70,57 +70,6 @@ const PanelAdministrador = () => {
   };
 
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  
-  //   if (producto.ISBN.length === 13) {
-  //     checkIsbnExists(producto.ISBN);
-  //     if (!isbnExists) {
-  //       window.confirm('Dar de alta el producto:' + producto.ISBN);
-  //       await postData();
-  //     } else {
-  //       window.alert('ISBN ya existe en la base de datos');
-  //     }
-  //   } else {
-  //     window.alert('El ISBN debe tener 13 dígitos');
-  //   }
-  
-  //   console.log('Datos del libro', producto);
-  // };
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  
-  //   if (producto.ISBN.length === 13) {
-  //     checkIsbnExists(producto.ISBN);
-  //     if (!isbnExists) {
-  //       await postData();
-  //       // Restablecer el estado del formulario
-  //       setProducto({
-  //         titulo: '',
-  //         autor: '',
-  //         precio_$: 0,
-  //         nro_paginas: 0,
-  //         peso: 0,
-  //         fecha_publicacion: '', 
-  //         ISBN: '',
-  //         editorial: '',
-  //         idioma: '',
-  //         descripcion: '',
-  //         stock: false,
-  //         url_imagen: '',
-  //         categoria: []
-  //       });
-  //       // Mostrar un mensaje de éxito al usuario
-  //       alert('Producto guardado exitosamente');
-  //     } else {
-  //       window.alert('ISBN ya existe en la base de datos');
-  //     }
-  //   } else {
-  //     window.alert('El ISBN debe tener 13 dígitos');
-  //   }
-  
-  //   console.log('Datos del libro', producto);
-  // };
   
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -185,8 +134,8 @@ const PanelAdministrador = () => {
             body: JSON.stringify({
               
               ...producto,
-              precio_$: parseInt(producto.precio_$, 10), // Convertir a entero
-          peso: parseInt(producto.peso, 10), // Convertir a entero
+              precio_$: parseInt(producto.precio_$, 10), 
+          peso: parseInt(producto.peso, 10), 
           categorias: producto.categoria.map(Number),
               stock: producto.stock === "on" ? true : false,
              

@@ -62,7 +62,7 @@ const VerCategorias = () => {
   const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/categorias')
+    fetch('http://localhost:3000/categorias-buscar-todas')
       .then((response) => response.json())
       .then((data) => setCategorias(data))
       .catch((error) => console.error('Error fetching categories:', error));

@@ -26,7 +26,7 @@ router.post("/categoria", createCategoria);
 
 router.get("/detail/:id", getProductoById);
 
-router.get("/categorias", getAllCategorias );
+router.get("/categorias-buscar-todas", getAllCategorias );
 
 router.get("/categorias/check", checkExistingCategory);
 
