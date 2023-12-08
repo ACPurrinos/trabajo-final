@@ -53,7 +53,7 @@ function DetalleDeProducto(props) {
   const [expanded, setExpanded] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const estaEnCarrito = carrito.some(item => item.id === id);
+    const estaEnCarrito = carrito.some(item => item.id === id);
 
   const manejarAgregarAlCarrito = () => {
     agregarAlCarrito({ id, titulo, precio_$ });
@@ -78,7 +78,7 @@ function DetalleDeProducto(props) {
     setOpen(false);
   };
 
-
+  
   return (
    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
 

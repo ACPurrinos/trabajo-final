@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import { red } from '@mui/material/colors';
 
 const Searchbar = ({ onSearchSubmit }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -22,7 +23,7 @@ const Searchbar = ({ onSearchSubmit }) => {
                 variant="outlined"
                 value={searchTerm}
                 onChange={handleSearchChange}
-                style={{ marginRight: '8px' }}
+                sx={{ marginRight: '8px', background: 'azure' }}
             />
             <IconButton type="submit" aria-label="search">
                 <SearchIcon />

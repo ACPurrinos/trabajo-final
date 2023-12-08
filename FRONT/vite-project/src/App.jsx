@@ -1,7 +1,8 @@
+import React from 'react';
 import './App.css';
 import ListadoDeProductos from './components/Listado de Productos/ListadoDeProductos';
 import SearchBar from './components/SearchBar/SearchBar';
-import { Route, Routes } from 'react-router-dom';
+import { Router, Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Detail from './Views/Detail';
 import Navbar from './components/NavBar/NavBar';
@@ -10,6 +11,8 @@ import Login from './Views/Login';
 import RegistroExitoso from './Views/RegistroExitoso';
 import Filtros from './components/Filtros/Filtros';
 import { CarritoProvider } from './providers/carritoContext';
+import Footer from './components/Footer/Footer';
+
 
 function App() {
 
@@ -69,6 +72,16 @@ function App() {
     aplicarFiltro(); // Aplica el filtro cada vez que cambia filtroActual
   }, [filtroActual]);
 
+  const [isContactModalOpen, setContactModalOpen] = useState(false);
+
+    const handleOpenContactModal = () => {
+        setContactModalOpen(true);
+    };
+
+    const handleCloseContactModal = () => {
+        setContactModalOpen(false);
+    };
+
   return (
     <div>
       <CarritoProvider>
@@ -87,6 +100,7 @@ function App() {
                 <ListadoDeProductos libros={librosFiltrados} /> :
                 <MensajeSinLibros />
               }
+              <Footer/>
             </>
           } />
           <Route path={'/detail/:id'} element={<Detail/>}/>

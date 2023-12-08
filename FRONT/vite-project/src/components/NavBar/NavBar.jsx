@@ -7,8 +7,6 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { ClassNames } from '@emotion/react';
-import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
@@ -21,9 +19,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
-
-
-
+import PasarelaDePago from '../Pasarela de pago/PasarelaDePago.jsx';
+import { Link } from 'react-router-dom';
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -48,74 +46,141 @@ const modalStyle = {
 };
 
 export default function Navbar() {
+  const { isAuthenticated, user, logout } = useAuth0();
+  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
+  const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false);
+  const [modalPagoAbierto, setModalPagoAbierto] = useState(false);
+  const [mostrarBotonMercadoPago, setMostrarBotonMercadoPago] = useState(false);
+  const manejarAbrirModalCarrito = () => setModalCarritoAbierto(true);
+  const manejarCerrarModalCarrito = () => setModalCarritoAbierto(false);
+  const manejarAbrirModalPago = () => {
+    setModalCarritoAbierto(false);
+    setModalPagoAbierto(true);
+  };
+  const manejarCerrarModalPago = () => setModalPagoAbierto(false);
   
-const { isAuthenticated, user, logout } = useAuth0()
 
-const signOut = () => {
-  if (isAuthenticated) {
-    logout()
-  }
-  else {
-  localStorage.setItem("loggedIn", false)
-  localStorage.setItem("userEmail", "")
-  window.location.reload()
-  }
-}
-  
-const getUserData = () => {
- if (isAuthenticated) {
-  return user.name
- }
- else return localStorage.getItem("userEmail")
-}
-  const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito  } = useContext(CarritoContext);
-  const [modalAbierto, setModalAbierto] = useState(false);
+  const signOut = () => {
+    if (isAuthenticated) {
+      logout();
+    } else {
+      localStorage.setItem("loggedIn", false);
+      localStorage.setItem("userEmail", "");
+      window.location.reload();
+    }
+  };
 
-  const manejarAbrirModal = () => setModalAbierto(true);
-  const manejarCerrarModal = () => setModalAbierto(false);
+  const getUserData = () => {
+    if (isAuthenticated) {
+      return user.name;
+    } else {
+      return localStorage.getItem("userEmail");
+    }
+  };
 
-  const handleChangeCantidad = (productoId, nuevaCantidad) => {
+  // Agrega el estado mostrarBotonPago al principio del componente
+  const [mostrarBotonPago, setMostrarBotonPago] = useState(true);
+
+  // Agrega el estado mostrarBotonMercadoPago al principio del componente
+
+  const handleChangeCantidad = async (productoId, nuevaCantidad) => {
     actualizarCantidad(productoId, nuevaCantidad);
+    await createPreference();
+      // Muestra el botón de MercadoPago
+    setMostrarBotonMercadoPago(false);
+    // Muestra el botón "Generar botón de pago" nuevamente
+    setMostrarBotonPago(true);
   };
 
   const precioTotalGeneral = carrito.reduce((total, producto) => {
     return total + (producto.precio_$ * (producto.cantidad || 1));
   }, 0);
 
+  const [preferenceId, setPreferenceId] = useState(null);
+
+  initMercadoPago("APP_USR-b5cd3a44-d2dc-4925-8680-e558cca48b35");
+
+  const createPreference = async () => {
+    try {
+      const items = carrito.map((producto) => ({
+        title: producto.titulo,
+        quantity: producto.cantidad || 1,
+        currency_id: "ARS",
+        unit_price: producto.precio_$
+      }));
+  
+      const totalPrice = items.reduce((total, item) => total + (item.quantity * item.unit_price), 0);
+  
+      // Crear una lista de descripciones de libros con cantidad (si es más de 1)
+      const bookDescriptions = carrito.map((producto) => {
+        const cantidad = producto.cantidad || 1;
+        return `${producto.titulo}${cantidad > 1 ? ` (${cantidad})` : ""}`;
+      });
+  
+      const response = await fetch("http://localhost:3000/create_preference", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          description: `Compra de libros: ${bookDescriptions.join(", ")}`,
+          price: totalPrice,
+          quantity: 1,
+          items: items
+        })
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        const { id } = data;
+        return id;
+      } else {
+        console.error("Error en la solicitud HTTP");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const handleBuy = async () => {
+    const id = await createPreference();
+    if (id) {
+      setPreferenceId(id);
+      // Oculta el botón "Generar botón de pago"
+      setMostrarBotonPago(false);
+      setMostrarBotonMercadoPago(true);
+    }
+  };
+
+
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: '#2196F3' }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <img src={logo} alt="Logo" />
-          </IconButton>
-         
-          
-         
-
-    
-  
-          {/* <IconButton aria-label="cart"/>
-           <StyledBadge badgeContent={5} color= "secondary" >
-             <ShoppingCartIcon />
-           </StyledBadge> */}
+          <Link to="/"> {/* Agrega el enlace al inicio */}
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              <img src={logo} alt="Logo" />
+            </IconButton>
+          </Link>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center' }}>
             Los mejores libros
           </Typography>
           <Typography variant="h7" component="div" sx={{ textAlign: 'right' }}>
-          {localStorage.getItem("loggedIn") === "true" || isAuthenticated ? 'Hola ' + getUserData() : 'Hola invitado'}
+            {localStorage.getItem("loggedIn") === "true" || isAuthenticated ? 'Hola ' + getUserData() : 'Hola invitado'}
           </Typography> 
           {localStorage.getItem("loggedIn") === "true" || isAuthenticated ?
-           <Button color='inherit' onClick={signOut}> Sign Out</Button> :
-           <Link to={'/login'}><Button color="inherit" >Sign In</Button></Link>
-        }
-          <IconButton aria-label="cart" onClick={manejarAbrirModal}>
+            <Button color='inherit' onClick={signOut}> Sign Out</Button> :
+            <Link to={'/login'}><Button color="inherit" >Sign In</Button></Link>
+          }
+          <IconButton aria-label="cart" onClick={manejarAbrirModalCarrito}>
             <StyledBadge badgeContent={carrito.length} color="secondary">
               <ShoppingCartIcon />
             </StyledBadge>
@@ -123,15 +188,15 @@ const getUserData = () => {
         </Toolbar>
       </AppBar>
 
-      <Modal open={modalAbierto} onClose={manejarCerrarModal}>
+      <Modal open={modalCarritoAbierto} onClose={manejarCerrarModalCarrito}>
         <Box sx={modalStyle}>
-        <IconButton
-          aria-label="close"
-          onClick={manejarCerrarModal}
-          sx={{ position: 'absolute', right: 8, top: 8 }}
-        >
-          <CloseIcon />
-        </IconButton>
+          <IconButton
+            aria-label="close"
+            onClick={manejarCerrarModalCarrito}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
           <Typography id="carrito-modal-titulo" variant="h6" component="h2">
             Carrito de Compras
           </Typography>
@@ -167,14 +232,20 @@ const getUserData = () => {
               <Typography variant="h6" sx={{ mt: 2 }}>
                 Total: {precioTotalGeneral}
               </Typography>
-              <Button variant="contained" color="primary" onClick={manejarCerrarModal}>
-                Ir a pagar
+              <Button variant="contained" color="primary" onClick={handleBuy} style={{ display: mostrarBotonPago ? 'block' : 'none' }}>
+                Generar botón de pago
               </Button>
-              <Button variant="elevation={2}" color="secondary" onClick={vaciarCarrito} sx={{ marginLeft: '10px' }}>
-                Vaciar Carrito
+              <Button style={{ display: mostrarBotonMercadoPago ? 'block' : 'none' }}>
+                {preferenceId && <Wallet initialization={{ preferenceId }} />}
               </Button>
             </>
           )}
+        </Box>
+      </Modal>
+      
+      <Modal open={modalPagoAbierto} onClose={manejarCerrarModalPago}>
+        <Box sx={modalStyle}>
+          <PasarelaDePago total={precioTotalGeneral} cerrarModal={manejarCerrarModalPago} />
         </Box>
       </Modal>
     </Box>

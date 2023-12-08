@@ -8,7 +8,7 @@ const checkLogin = async (req, res) => {
     try {
         const { mail, password } = req.body;
 
-if (!mail || !password) return res.status(400).json('Faltan datos')
+if (!mail || !password) return res.status(400).json('Faltan datos') 
 
 const user = await User.findOne({where: {
     [Op.and]: [

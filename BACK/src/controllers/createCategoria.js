@@ -7,7 +7,7 @@ const createCategoria =async (req, res)=>{
             where: {nombre: nombre} }); 
         return res.json(newCategoria);
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error.message) 
     }
     
    
