@@ -173,7 +173,7 @@ const PanelAdministrador = () => {
       data.append('upload_preset', 'preset_libros');
   
       try {
-        const response = await axios.post('https://api.cloudinary.com/v1_1/.../image/upload', data);
+        const response = await axios.post('https://api.cloudinary.com/v1_1/dnefbrqfz/image/upload', data);
         console.log(response.data);
         setProducto({ ...producto, url_imagen: response.data.secure_url });
         setUrlImagen(response.data.secure_url);

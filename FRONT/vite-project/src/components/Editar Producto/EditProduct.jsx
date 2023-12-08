@@ -61,7 +61,7 @@ const EditProduct = () => {
 
     // Lógica para subir la nueva imagen a Cloudinary
     try {
-      const response = await fetch('https://api.cloudinary.com/v1_1/.../image/upload', {
+      const response = await fetch('https://api.cloudinary.com/v1_1/dnefbrqfz/image/upload', {
         method: 'POST',
         body: data,
       });
