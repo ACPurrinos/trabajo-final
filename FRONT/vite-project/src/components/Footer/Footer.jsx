@@ -42,24 +42,25 @@ const Footer = () => {
     };
 
     return (
-        <Box component="footer" sx={{ bgcolor: 'black', color: 'primary.main', mt: 3, py: 3 }}>
+        <Box component="footer" sx={{ bgcolor: '#2196F3', color: 'primary.main', mt: 3, py: 3, flexGrow: 1, boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.5)' }}>
             <Container maxWidth="lg">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6}>
-                        <Typography variant="h6" color="inherit" gutterBottom>
+                        <Typography variant="h6" color="white" gutterBottom>
                             BookFinder
                         </Typography>
-                        <Typography variant="subtitle1" color="inherit">
-                            Tu destino para encontrar y comprar libros en línea.
+                        <Typography variant="subtitle1" color="white">
+                            Tu sitio para encontrar y comprar libros en línea.
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Typography variant="subtitle1" color="inherit">
+                      <Typography variant="subtitle1" color="white">
                         ¿Tienes preguntas? Por favor, no dudes en contactarnos.
-                      </Typography>
-                        <Button onClick={handleOpen} color="inherit">
+                     </Typography>
+                        <Button onClick={handleOpen}  color="secondary" style={{ color: 'white' }}>
                             Contacto
                         </Button>
+                     
                     </Grid>
                 </Grid>
             </Container>
