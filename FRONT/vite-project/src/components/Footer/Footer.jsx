@@ -43,7 +43,7 @@ const Footer = () => {
 
     return (
         <Box component="footer" sx={{ bgcolor: '#2196F3', color: 'primary.main', mt: 3, py: 3, flexGrow: 1, boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.5)' }}>
-            <Container maxWidth="lg">
+            <Container maxWidth="false">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6}>
                         <Typography variant="h6" color="white" gutterBottom>

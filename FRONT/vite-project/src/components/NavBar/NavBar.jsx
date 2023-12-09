@@ -21,7 +21,7 @@ import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import PasarelaDePago from '../Pasarela de pago/PasarelaDePago.jsx';
 import { Link } from 'react-router-dom';
-
+import SearchBar from '../../components/SearchBar/SearchBar.jsx';
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
     right: -3,
@@ -42,7 +42,12 @@ const modalStyle = {
   boxShadow: 24,
   p: 4,
 };
-
+const onSearchSubmit = (searchTerm) => {
+  fetch(`http://localhost:3000/search?query=${encodeURIComponent(searchTerm)}`)
+    .then(response => response.json())
+    .then(data => setLibrosFiltrados(data))
+    .catch(error => console.error('Error al buscar libros:', error));
+};
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth0();
   const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
@@ -87,6 +92,7 @@ export default function Navbar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: '#2196F3' }}>
         <Toolbar>
+       
           <IconButton
             size="large"
             edge="start"
@@ -96,15 +102,16 @@ export default function Navbar() {
           >
             <img src={logo} alt="Logo" />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center' }}>
-            Los mejores libros
+          
+          <Typography variant="h5" component="div" sx={{ flexGrow: 1, textAlign: 'left', fontStyle: 'italic', marginLeft: '20px' }}>            Los mejores libros
           </Typography>
+          <SearchBar onSearchSubmit={onSearchSubmit} />
           <Typography variant="h7" component="div" sx={{ textAlign: 'right' }}>
             {localStorage.getItem("loggedIn") === "true" || isAuthenticated ? 'Hola ' + getUserData() : 'Hola invitado'}
           </Typography> 
           {localStorage.getItem("loggedIn") === "true" || isAuthenticated ?
-            <Button color='inherit' onClick={signOut}> Sign Out</Button> :
-            <Link to={'/login'}><Button color="inherit" >Sign In</Button></Link>
+            <Button color='inherit' onClick={signOut} sx={{ color: 'white' }}> Sign Out</Button> :
+            <Link to={'/login'}><Button color="inherit" sx={{ color: 'white' }} >Sign In</Button></Link>
           }
           <IconButton aria-label="cart" onClick={manejarAbrirModalCarrito}>
             <StyledBadge badgeContent={carrito.length} color="secondary">

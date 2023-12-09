@@ -12,20 +12,29 @@ const Searchbar = ({ onSearchSubmit }) => {
     };
 
     const handleSubmit = (event) => {
-        event.preventDefault(); // Previene el comportamiento por defecto del formulario
-        onSearchSubmit(searchTerm.toLowerCase()); // Convierte el término de búsqueda a minúsculas antes de enviarlo
+        event.preventDefault();
+        onSearchSubmit(searchTerm.toLowerCase());
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center', margin: '70px 0 0 0'  }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'left', margin: '10px 50px 10px 0px' }}>
             <TextField
                 label="Buscar libro"
                 variant="outlined"
                 value={searchTerm}
                 onChange={handleSearchChange}
-                sx={{ marginRight: '8px', background: 'azure' }}
+                InputLabelProps={{
+                    style: { color: searchTerm ? 'red' : 'gray', height: '150px' }, // Cambia el color de la etiqueta del campo
+                }}
+                sx={{
+                    marginRight: '8px',
+                    background: 'azure',
+                    width: '500px', // Ajusta la anchura del campo
+                    height: '50px',
+                    borderRadius: '5px',
+                }}
             />
-            <IconButton type="submit" aria-label="search">
+            <IconButton type="submit" aria-label="search" color="lightgray">
                 <SearchIcon />
             </IconButton>
         </form>

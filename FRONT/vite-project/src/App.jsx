@@ -1,21 +1,17 @@
-import React from 'react';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { CarritoProvider } from './providers/carritoContext';
+import Navbar from './components/NavBar/NavBar';
 import ListadoDeProductos from './components/Listado de Productos/ListadoDeProductos';
 import SearchBar from './components/SearchBar/SearchBar';
-import { Router, Route, Routes } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import Detail from './Views/Detail';
-import Navbar from './components/NavBar/NavBar';
+import Filtros from './components/Filtros/Filtros';
 import MensajeSinLibros from './components/Mensaje sin libros/MensajeSinLibros';
+import Footer from './components/Footer/Footer';
+import Detail from './Views/Detail';
 import Login from './Views/Login';
 import RegistroExitoso from './Views/RegistroExitoso';
-import Filtros from './components/Filtros/Filtros';
-import { CarritoProvider } from './providers/carritoContext';
-import Footer from './components/Footer/Footer';
-
 
 function App() {
-
   const [librosFiltrados, setLibrosFiltrados] = useState([]);
   const [precioMax, setPrecioMax] = useState(0); 
   const [filtroActual, setFiltroActual] = useState({ categoria: '', precio: 100000, ordenamiento: 'precio_desc' });
@@ -61,55 +57,52 @@ function App() {
     aplicarFiltro();
   };
 
-  const onSearchSubmit = (searchTerm) => {
-    fetch(`http://localhost:3000/search?query=${encodeURIComponent(searchTerm)}`)
-      .then(response => response.json())
-      .then(data => setLibrosFiltrados(data))
-      .catch(error => console.error('Error al buscar libros:', error));
-  };
-
+  
   useEffect(() => {
     aplicarFiltro(); // Aplica el filtro cada vez que cambia filtroActual
   }, [filtroActual]);
 
   const [isContactModalOpen, setContactModalOpen] = useState(false);
 
-    const handleOpenContactModal = () => {
-        setContactModalOpen(true);
-    };
+  const handleOpenContactModal = () => {
+    setContactModalOpen(true);
+  };
 
-    const handleCloseContactModal = () => {
-        setContactModalOpen(false);
-    };
+  const handleCloseContactModal = () => {
+    setContactModalOpen(false);
+  };
 
   return (
     <div>
       <CarritoProvider>
-        <Navbar/> 
-        <Routes>
-          <Route path={"/"} element={
-            <>
-              <SearchBar onSearchSubmit={onSearchSubmit} />
-              <Filtros 
-                onFilterChange={handleFilterChange} 
-                onPriceChange={onPriceChange}
-                onSortChange={onSortChange} 
-                precioMax={precioMax} 
-              />
-              {librosFiltrados.length > 0 ? 
-                <ListadoDeProductos libros={librosFiltrados} /> :
-                <MensajeSinLibros />
-              }
-              <Footer/>
-            </>
-          } />
-          <Route path={'/detail/:id'} element={<Detail/>}/>
-          <Route path='/login' element={<Login/>}></Route>
-          <Route path={'registroexitoso'} element={<RegistroExitoso/>}></Route>
-        </Routes>
+        <Navbar /> 
+        <div style={{ padding: '100px'}}>
+          <Routes>
+            <Route path={"/"} element={
+              <>
+               
+                <Filtros 
+                  onFilterChange={handleFilterChange} 
+                  onPriceChange={onPriceChange}
+                  onSortChange={onSortChange} 
+                  precioMax={precioMax} 
+                />
+                {librosFiltrados.length > 0 ? 
+                  <ListadoDeProductos libros={librosFiltrados} /> :
+                  <MensajeSinLibros />
+                }
+              </>
+            } />
+            <Route path={'/detail/:id'} element={<Detail/>}/>
+            <Route path='/login' element={<Login/>}></Route>
+            <Route path={'registroexitoso'} element={<RegistroExitoso/>}></Route>
+          </Routes>
+        </div>
+        <Footer/>
       </CarritoProvider>
     </div>
   );
 } 
 
 export default App;
+
