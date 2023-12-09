@@ -27,9 +27,7 @@
     box-sizing: border-box;
   }
   
-  .checkbox {
-    margin: 8px 0;
-  }
+ 
   
   .button {
     width: 100%;
@@ -45,4 +43,45 @@
     color: red;
   }
 
-  
+  /* styles.css */
+
+/* ... Otros estilos ... */
+
+.form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  color: #333;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+
+
+.button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button:disabled {
+  background-color: #ddd;
+  color: #666;
+  cursor: not-allowed;
+}
+
+

@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styles from './PanelAdministrador.module.css';
 import axios from 'axios';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+
+
+
 
 
 const PanelAdministrador = () => {
@@ -46,12 +52,18 @@ const PanelAdministrador = () => {
 
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setProducto({ ...producto, [name]: value });
+    const { name, value, type, checked } = event.target;
+    if (type === 'checkbox') {
+      setProducto({ ...producto, [name]: checked });
+    } else {
+      setProducto({ ...producto, [name]: value });
+    }
+    // setProducto({ ...producto, [name]: value });
     if (name === 'ISBN') {
       checkIsbnExists(value);
       console.log(value)
     }
+    console.log(producto)
   };
 
 
@@ -140,7 +152,8 @@ const PanelAdministrador = () => {
               precio_$: parseInt(producto.precio_$, 10), 
           peso: parseInt(producto.peso, 10), 
           categorias: producto.categoria.map(Number),
-              stock: producto.stock === "on" ? true : false,
+              // stock: producto.stock === "on" ? true : false,
+              // [name]: value === 'true', 
              
              
           }),
@@ -186,8 +199,14 @@ const PanelAdministrador = () => {
       setUrlImagen('');
     };
 
+    const handleSnackbarClose = () => {
+      setGuardadoExitoso(false);
+    };
 
-  return (
+
+    return (
+     
+    
 
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -362,29 +381,33 @@ const PanelAdministrador = () => {
 
 
         <div className={styles.formGroup}>
-          <label htmlFor="stock">En Stock:</label>
-          <input
-            type="checkbox"
-            id="stock"
-            name="stock"
-            checked={producto.stock}
-            onChange={handleInputChange}
-            className={styles.checkbox}
-          />
-        </div>
+      <label>Stock:</label>
+      <div>
+        <input
+          type="radio"
+          id="stockTrue"
+          name="stock"
+          value="true"
+          checked={producto.stock === true}
+          onChange={handleInputChange}
+          className={styles.checkbox}
+        />
+        <label htmlFor="stockTrue">Disponible</label>
+      </div>
+      <div>
+        <input
+          type="radio"
+          id="stockFalse"
+          name="stock"
+          value="false"
+          checked={producto.stock === false}
+          onChange={handleInputChange}
+          className={styles.checkbox}
+        />
+        <label htmlFor="stockFalse">No Disponible</label>
+      </div>
+    </div>
 
-        {/* <div className={styles.formGroup}>
-          <label htmlFor="url_imagen">URL de Imagen:</label>
-          <input
-            type="text"
-            id="url_imagen"
-            name="url_imagen"
-            value={producto.url_imagen}
-            onChange={handleInputChange}
-            className={styles.input}
-            required
-          />
-        </div> */}
 
         <div className={styles.formGroup}>
           <label htmlFor="url_imagen">Seleccionar Imagen:</label>
@@ -413,8 +436,24 @@ const PanelAdministrador = () => {
     Guardar Producto
   </button>
 </form>
+
+{guardadoExitoso && (
+        <Snackbar
+          open={guardadoExitoso}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+          message="¡Producto guardado exitosamente!"
+          action={
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          }
+        />
+      )}
 </div>
 );
             };    
+
+
 
 export default PanelAdministrador;

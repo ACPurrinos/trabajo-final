@@ -2,13 +2,14 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import styles from './ProductTable.module.css';
 import { AlignHorizontalRight } from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
 
 const ProductTable = () => {
   const [products, setProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,13 +19,15 @@ const ProductTable = () => {
       .catch((error) => console.error('Error fetching products:', error));
   }, []);
 
+
+
   const handleEdit = (id) => {
-    // Lógica para editar el producto con el ID proporcionado
     navigate(`/editar-producto/${id}`);
   };
 
+
+
   const handleDelete = async (product) => {
- 
     const confirmDelete = window.confirm(
       `¿Estás seguro de que quieres eliminar el producto?\n\nID: ${product.id}\nTítulo: ${product.titulo}\nAutor: ${product.autor}\nISBN: ${product.ISBN}`
     );
@@ -37,7 +40,7 @@ const ProductTable = () => {
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-
+      
       // Actualizar la lista de productos después de la eliminación
       setProducts(products.filter((p) => p.id !== product.id));
 
@@ -48,8 +51,23 @@ const ProductTable = () => {
     }}
   };
 
+  const filteredBooks = products
+    // (product) => product.titulo.toLowerCase().includes(searchQuery.toLowerCase())
+    .filter((product) => product.titulo.toLowerCase().includes(searchQuery.toLowerCase()))
+    .sort((a, b) => a.id - b.id);
+  
+
+
   return (
+
     <div className={styles.tableContainer}>
+       <TextField
+        label="Buscar por título"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
       <table className={styles.table}>
         <thead>
           <tr>
@@ -65,7 +83,9 @@ const ProductTable = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
+          {/* {products.map((product) => ( */}
+
+          {filteredBooks.map((product) => (
             <tr key={product.id}>
               <td className={styles.cell}>{product.id}</td>
               <td className={styles.cell}>{product.titulo}</td>
