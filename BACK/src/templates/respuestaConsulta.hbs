@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Respuesta a tu Consulta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #2196F3;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .footer {
+            background-color: #000000;
+            color: #2196F3;
+            text-align: center;
+            padding: 10px;
+        }
+        .message-content {
+            padding: 10px;
+            background-color: #f1f1f1;
+        }
+        .message-content p {
+            margin: 10px 0;
+        }
+        .message-content a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>BookFinder</h1>
+        </div>
+        
+        <div class="message-content">
+            <h2>Hola {{nombre}},</h2>
+            <p>Hemos recibido tu mensaje "{{mensaje}}" y queremos agradecerte por ponerte en contacto.</p>
+            <p>Tu consulta es importante para nosotros y uno de nuestros representantes te responderá lo más pronto posible.</p>
+            <p>Mientras tanto, siéntete libre de seguir explorando nuestra colección de libros en <a href="https://fronttp-production.up.railway.app/">BookFinder</a>.</p>
+            <p>¡Gracias por elegirnos!</p>
+        </div>
+
+        <div class="footer">
+            <p>© {{añoActual}} BookFinder - Todos los derechos reservados</p>
+        </div>
+    </div>
+</body>
+</html>
