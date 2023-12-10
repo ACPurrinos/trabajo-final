@@ -9,7 +9,15 @@ import Navbar from './components/NavBar/NavBar';
 import MensajeSinLibros from './components/Mensaje sin libros/MensajeSinLibros';
 import Login from './Views/Login';
 import RegistroExitoso from './Views/RegistroExitoso';
+import PanelAdministrador from './components/PanelAdministrador/PanelAdministrador';
+import DashboardAdmin from './Views/DashboardAdmin';
+import FormCategoria from './components/FormCategoria/FormCategoria';
 import Filtros from './components/Filtros/Filtros';
+import { Dashboard } from '@mui/icons-material';
+import ProductTable from './components/ProductTable/ProductTable';
+import VerCategorias from './components/Ver Categorias/VerCategorias';
+import EditProduct from './components/Editar Producto/EditProduct';
+
 import { CarritoProvider } from './providers/carritoContext';
 import Footer from './components/Footer/Footer';
 
@@ -85,7 +93,7 @@ function App() {
   return (
     <div>
       <CarritoProvider>
-        <Navbar/> 
+        <Navbar />
         <Routes>
           <Route path={"/"} element={
             <>
@@ -103,7 +111,60 @@ function App() {
               <Footer/>
             </>
           } />
-          <Route path={'/detail/:id'} element={<Detail/>}/>
+          <Route path={'/detail/:id'} element={<Detail />} />
+        <Route path={PATHROUTES.ADMINISTRADOR} element={<DashboardAdmin />} />
+
+        <Route path={PATHROUTES.FORMPRODUCTOS} 
+        element={
+          <>
+            <DashboardAdmin />
+            <PanelAdministrador />
+          </>
+        }
+        />
+
+        <Route
+          path={PATHROUTES.VERPRODUCTOS}
+          element={
+            <>
+              <DashboardAdmin />
+              <ProductTable />
+            </>
+          }
+        />
+
+        <Route
+          path={PATHROUTES.FORMCATEGORIA}
+          element={
+            <>
+              <DashboardAdmin />
+              <FormCategoria />
+            </>
+          }
+        />
+
+
+
+        <Route
+          path={PATHROUTES.VERCATEGORIAS}
+          element={
+            <>
+              <DashboardAdmin />
+              <VerCategorias />
+            </>
+          }
+        />
+
+        <Route
+          path={PATHROUTES.EDITARPRODUCTO}
+          element={
+            <>
+              <DashboardAdmin />
+              <EditProduct />
+            </>
+          }
+        />
+
           <Route path='/login' element={<Login/>}></Route>
           <Route path={'registroexitoso'} element={<RegistroExitoso/>}></Route>
         </Routes>
