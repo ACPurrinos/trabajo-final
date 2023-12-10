@@ -283,7 +283,6 @@ export default function Navbar() {
                 style={{ 
                   backgroundColor: '#009ee3', 
                   color: '#ffffff',
-                  display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: '5px',
