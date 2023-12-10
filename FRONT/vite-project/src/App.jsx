@@ -17,6 +17,7 @@ import { Dashboard } from '@mui/icons-material';
 import ProductTable from './components/ProductTable/ProductTable';
 import VerCategorias from './components/Ver Categorias/VerCategorias';
 import EditProduct from './components/Editar Producto/EditProduct';
+import PATHROUTES from './helpers/PathRoutes.helper';
 
 import { CarritoProvider } from './providers/carritoContext';
 import Footer from './components/Footer/Footer';
