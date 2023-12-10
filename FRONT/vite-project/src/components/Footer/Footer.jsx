@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Box, Typography, Button, TextField, CircularProgress, Container, Grid, Link } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import SendIcon from '@mui/icons-material/Send';
+import { Facebook, Twitter, Instagram } from '@mui/icons-material';
 
 const Footer = () => {
     const [open, setOpen] = useState(false);
@@ -30,9 +31,10 @@ const Footer = () => {
                 throw new Error(`Error HTTP: ${response.status}`);
             }
             await response.json();
+            setRespuesta('Mensaje enviado con éxito.'); // Agrega esta línea
             setTimeout(() => {
               setOpen(false);
-              setRespuesta('');
+              setRespuesta(''); // Limpia el mensaje de respuesta
           }, 2000);
         } catch (error) {
             setRespuesta('Error al enviar el mensaje: ' + error.message);
@@ -42,27 +44,60 @@ const Footer = () => {
     };
 
     return (
-        <Box component="footer" sx={{ bgcolor: 'black', color: 'primary.main', mt: 3, py: 3 }}>
+        <Box component="footer" sx={{ bgcolor: 'white', color: 'primary.main', mt: 3, py: 3 }}>
             <Container maxWidth="lg">
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                         <Typography variant="h6" color="inherit" gutterBottom>
                             BookFinder
                         </Typography>
                         <Typography variant="subtitle1" color="inherit">
                             Tu destino para encontrar y comprar libros en línea.
                         </Typography>
+                        {/* Redes sociales */}
+                        <Box>
+                            <Link href="#" color="inherit">
+                                <Facebook />
+                            </Link>
+                            <Link href="#" color="inherit">
+                                <Twitter />
+                            </Link>
+                            <Link href="#" color="inherit">
+                                <Instagram />
+                            </Link>
+                        </Box>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Typography variant="subtitle1" color="inherit">
-                        ¿Tienes preguntas? Por favor, no dudes en contactarnos.
-                      </Typography>
-                        <Button onClick={handleOpen} color="inherit">
-                            Contacto
+                    <Grid item xs={12} sm={4}>
+                        {/* Información de contacto */}
+                        <Typography variant="subtitle1" color="inherit">
+                            123 Calle Ejemplo, Ciudad, País
+                        </Typography>
+                        <Typography variant="subtitle1" color="inherit">
+                            +123 456 7890
+                        </Typography>
+                        <Typography variant="subtitle1" color="inherit">
+                            contacto@bookfinder.site
+                        </Typography>
+                        <Button onClick={handleOpen} style={{ backgroundColor: 'blue', color: 'white' }}>
+                            Enviar mensaje
                         </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        {/* Enlaces adicionales */}
+                        <Link href="#" color="inherit" variant="body2">Acerca de Nosotros</Link><br />
+                        <Link href="#" color="inherit" variant="body2">Política de Privacidad</Link><br />
+                        <Link href="#" color="inherit" variant="body2">Términos de Servicio</Link>
                     </Grid>
                 </Grid>
             </Container>
+
+            <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 3 }}>
+                {'Derechos Reservados © '}
+                BookFinder
+                {' '}
+                {new Date().getFullYear()}
+                {'.'}
+            </Typography>
 
             <Modal
                 open={open}

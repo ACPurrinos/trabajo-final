@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { CarritoContext } from '../../providers/carritoContext.jsx';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -22,7 +22,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import PasarelaDePago from '../Pasarela de pago/PasarelaDePago.jsx';
 import { Link } from 'react-router-dom';
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-
+import Snackbar from '@mui/material/Snackbar';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -47,7 +47,9 @@ const modalStyle = {
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth0();
+
   const { carrito, actualizarCantidad, removerDelCarrito, vaciarCarrito } = useContext(CarritoContext);
+  const [prevCartCount, setPrevCartCount] = useState(carrito.length);
   const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false);
   const [modalPagoAbierto, setModalPagoAbierto] = useState(false);
   const [mostrarBotonMercadoPago, setMostrarBotonMercadoPago] = useState(false);
@@ -58,7 +60,10 @@ export default function Navbar() {
     setModalPagoAbierto(true);
   };
   const manejarCerrarModalPago = () => setModalPagoAbierto(false);
-  
+  const handleSnackbarClose = () => {
+  setSnackbarOpen(false); // Cierra el Snackbar
+  };
+
 
   const signOut = () => {
     if (isAuthenticated) {
@@ -90,6 +95,7 @@ export default function Navbar() {
     setMostrarBotonMercadoPago(false);
     // Muestra el botón "Generar botón de pago" nuevamente
     setMostrarBotonPago(true);
+
   };
 
   const precioTotalGeneral = carrito.reduce((total, producto) => {
@@ -142,6 +148,21 @@ export default function Navbar() {
     }
   };
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  useEffect(() => {
+    if (carrito.length > prevCartCount) {
+        // El carrito ha crecido, muestra el Snackbar
+        setSnackbarOpen(true);
+    }
+    // Actualiza el conteo previo del carrito para la próxima comparación
+    setPrevCartCount(carrito.length);
+
+    // Resto de tu lógica...
+    console.log("El carrito ha cambiado. Nueva longitud del carrito:", carrito.length);
+    setMostrarBotonMercadoPago(false);
+    setMostrarBotonPago(true);
+}, [carrito]);
 
   const handleBuy = async () => {
     const id = await createPreference();
@@ -159,6 +180,7 @@ export default function Navbar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: '#2196F3' }}>
         <Toolbar>
+     
           <Link to="/"> {/* Agrega el enlace al inicio */}
             <IconButton
               size="large"
@@ -177,36 +199,60 @@ export default function Navbar() {
             {localStorage.getItem("loggedIn") === "true" || isAuthenticated ? 'Hola ' + getUserData() : 'Hola invitado'}
           </Typography> 
           {localStorage.getItem("loggedIn") === "true" || isAuthenticated ?
-            <Button color='inherit' onClick={signOut}> Sign Out</Button> :
-            <Link to={'/login'}><Button color="inherit" >Sign In</Button></Link>
-          }
+
+           <Button color='inherit' onClick={signOut}> Cerrar sesión </Button> :
+           <Link to={'/login'}><Button color="inherit" >Iniciar sesión</Button></Link>
+        }
+         
           <IconButton aria-label="cart" onClick={manejarAbrirModalCarrito}>
+
             <StyledBadge badgeContent={carrito.length} color="secondary">
               <ShoppingCartIcon />
             </StyledBadge>
           </IconButton>
         </Toolbar>
+        <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message="Libro agregado al carrito"
+        action={
+          <React.Fragment>
+            <Button color="primary" size="small" onClick={manejarAbrirModalCarrito} sx={{ color: 'white' }}>
+              VER CARRITO
+            </Button>
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Cambia la posición
+        ContentProps={{
+          sx: { backgroundColor: 'green' } // Cambia el estilo del contenido
+        }}
+      />
       </AppBar>
 
       <Modal open={modalCarritoAbierto} onClose={manejarCerrarModalCarrito}>
-        <Box sx={modalStyle}>
-          <IconButton
-            aria-label="close"
-            onClick={manejarCerrarModalCarrito}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography id="carrito-modal-titulo" variant="h6" component="h2">
-            Carrito de Compras
-          </Typography>
-          {carrito.length === 0 && (
-            <Alert severity="info" sx={{ mt: 2 }}>
-              Tu carrito está vacío.
-            </Alert>
-          )}
-          <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-            {carrito.map((producto, index) => (
+  <Box sx={{ ...modalStyle, overflowY: 'auto', maxHeight: '800px'}}>
+    <IconButton
+      aria-label="close"
+      onClick={manejarCerrarModalCarrito}
+      sx={{ position: 'absolute', right: 8, top: 8 }}
+    >
+      <CloseIcon />
+    </IconButton>
+    <Typography id="carrito-modal-titulo" variant="h6" component="h2">
+      Carrito de Compras
+    </Typography>
+    {carrito.length === 0 && (
+      <Alert severity="info" sx={{ mt: 2 }}>
+        Tu carrito está vacío.
+      </Alert>
+    )}
+    {/* Ajuste aquí para la lista deslizable */}
+    <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: '400px', overflowY: 'auto' }}>
+      {carrito.map((producto, index) => (
               <ListItem key={index}>
                 <ListItemText
                   primary={producto.titulo}
@@ -230,12 +276,35 @@ export default function Navbar() {
           {carrito.length > 0 && (
             <>
               <Typography variant="h6" sx={{ mt: 2 }}>
-                Total: {precioTotalGeneral}
+                Total: {precioTotalGeneral} AR$
               </Typography>
-              <Button variant="contained" color="primary" onClick={handleBuy} style={{ display: mostrarBotonPago ? 'block' : 'none' }}>
-                Generar botón de pago
+              <Button
+                onClick={handleBuy}
+                style={{ 
+                  backgroundColor: '#009ee3', 
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '5px',
+                  height: '50px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '16px',
+                  width: '100%',
+                  minWidth: '280px',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  lineHeight: '18px',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  position: 'relative',
+                  display: mostrarBotonPago ? 'block' : 'none' // Ajusta la visualización según la condición
+                }}
+              >
+                Finalizar Compra
               </Button>
-              <Button style={{ display: mostrarBotonMercadoPago ? 'block' : 'none' }}>
+              <Button style={{ display: mostrarBotonMercadoPago ? 'block' : 'none', width: '100%', }}>
                 {preferenceId && <Wallet initialization={{ preferenceId }} />}
               </Button>
             </>
@@ -251,3 +320,4 @@ export default function Navbar() {
     </Box>
   );
 }
+

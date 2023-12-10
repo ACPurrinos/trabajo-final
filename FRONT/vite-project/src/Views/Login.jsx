@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from '../../src/assets/logo.png'
 import { useNavigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
+import { Button, FormControl, InputLabel, MenuItem, Paper, Select, TextField } from '@mui/material'
+import { Google } from '@mui/icons-material'
 
 
 
 const Login = () => {
 
+  
+
   const { loginWithRedirect } = useAuth0()
+  
+
+
+
 const [errorMessage, setErrorMessage] = useState({
   message: ''
 })
@@ -22,13 +30,16 @@ const [errorMessage, setErrorMessage] = useState({
   const [userData, setUserData] = useState({
     mail: "",
     password: "",
+    rol: ""
   })
 
+  
   const handleChange = (event) => {
     const property = event.target.name 
     const value = event.target.value
     setUserData({...userData, [property]:value})
   }
+  
   
   const submit = (e) => {
       e.preventDefault()
@@ -74,7 +85,8 @@ const [errorMessage, setErrorMessage] = useState({
         },
         body: JSON.stringify({ 
            mail: userData.mail,
-           password: userData.password
+           password: userData.password,
+           rol: userData.rol
          }),
       })
       .then((res) => res.json())
@@ -97,32 +109,53 @@ const [errorMessage, setErrorMessage] = useState({
 
   return (
     <div>
+      
       <form method={'post'}  onSubmit={submit}>
-        <img src={logo}></img>
+        
         <h1>{isSignedUp ? 'Login' : 'Sign Up'}</h1>
-      <label htmlFor='mail'>Mail: </label>
-      <input type='text' id='mail' name='mail' value={userData.mail} onChange={handleChange}></input>
+      
+      {/* <input type='text' id='mail' name='mail' value={userData.mail} onChange={handleChange}></input> */}
+      <TextField id="email" label="Email" variant="outlined" name='mail' value={userData.mail} onChange={handleChange}/>
       <br></br>
-      <label htmlFor='password'>Password:</label>
-      <input type='text' id='password' name='password' value={userData.password} onChange={handleChange}></input>
       <br></br>
-      <h4>{errorMessage.message}</h4> <br></br>
-      <input type='submit'></input> <br></br>
-      <button onClick={loginWithRedirect}>Sign In with Google </button>
+      <TextField id="pass" label="Contraseña" variant="outlined" name='password' value={userData.password} onChange={handleChange}/>
+      <br></br> 
       {!isSignedUp ? 
       <div>
-        <label htmlFor='rol'> </label>
-      <select name='rol' id='rol'>
+        <label htmlFor='rol'> <h4>¿Es cliente o vendedor?</h4></label> 
+      {/* <select name='rol' id='rol'>
         <option value={'cliente'}>Cliente</option>
         <option value={'admin'}>Administrador</option>
-      </select>
+      </select> */}
+       <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+      <InputLabel id="demo-simple-select-standard-label">Elija su rol...</InputLabel>
+        <Select
+          labelId="demo-simple-select-standard-label"
+          id="demo-simple-select-standard"
+          name='rol'
+          onChange={handleChange}
+          value={userData.rol}
+          label="Rol"
+        >
+          
+          <MenuItem value={'cliente'}>Cliente</MenuItem>
+          <MenuItem value={'admin'}>Vendedor</MenuItem>
+          
+        </Select>
+        </FormControl>
       </div>
        
-      : ''}
-      <h4>{isSignedUp ? "Don't have an account?" : "Already have an account?"}</h4>
-      <button onClick={handleLogin}>{isSignedUp ? 'Sign Up' : 'Login'}</button>
+      : ''} 
+      <h4>{errorMessage.message}</h4> <br></br>
+      <Button variant='contained' type='submit' color='success'> Enviar</Button> <br></br> <br></br>
+      <Button variant='outlined' startIcon={<Google/>} onClick={loginWithRedirect}> Ingresar con Google </Button>
+      
+      <h4>{isSignedUp ? "¿No tienes una cuenta?" : "¿Ya tienes una cuenta?"}</h4>
+      
+      <Button onClick={handleLogin} variant='contained'>{isSignedUp ? 'Registrarse' : 'Iniciar sesión'}</Button>
        
       </form>
+      
     </div>
   )
 }
