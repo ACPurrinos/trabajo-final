@@ -14,7 +14,7 @@ const Filtros = ({ onFilterChange, onPriceChange, onSortChange, precioMax }) => 
 
     // Función para cargar las categorías desde el backend
     useEffect(() => {
-        fetch('http://localhost:3000/categorias')
+        fetch('https://backtp-production.up.railway.app/categorias')
             .then(response => response.json())
             .then(data => setCategorias(data))
             .catch(error => console.error('Error al cargar categorías:', error));

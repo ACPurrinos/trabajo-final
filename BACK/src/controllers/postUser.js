@@ -2,11 +2,11 @@ const { User }= require('../DB_connection')
 
 const postUser = async (req, res) => {
     try {
-        const { mail, password } = req.body
+        const { mail, password, rol } = req.body
          console.log(req.body);
 
-         if(!mail || !password) return res.status(400).json('Faltan datos')
-         const user = await User.findOrCreate({ where: {mail: mail, password: password}})
+         if(!mail || !password || !rol) return res.status(400).json('Faltan datos')
+         const user = await User.findOrCreate({ where: {mail: mail, password: password, rol: rol}})
 
          return res.status(200).json('Registro exitoso')
     } catch (error) {

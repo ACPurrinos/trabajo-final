@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import DetalleDeProducto from '../Detalle de Producto/DetalleDeProducto';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Paginacion from '../Paginacion/Paginacion';
-import { spacing } from '@mui/system';
 
 function ListadoDeProductos(props) {
     const { libros } = props;
@@ -12,6 +11,19 @@ function ListadoDeProductos(props) {
     const indexOfLastLibro = currentPage * librosPorPagina;
     const indexOfFirstLibro = indexOfLastLibro - librosPorPagina;
     const librosActuales = libros.slice(indexOfFirstLibro, indexOfLastLibro);
+    const [isSticky, setIsSticky] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsSticky(window.scrollY > 200); // Ajusta 200 según tus necesidades
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     const handleChangePage = (newPage) => {
         setCurrentPage(newPage);
@@ -19,6 +31,24 @@ function ListadoDeProductos(props) {
 
     return (
         <div>
+            <div style={{ 
+            position: isSticky ? 'fixed' : 'static',
+            padding: "5px",
+            top: 85, 
+            left: '50%',
+            transform: isSticky ? 'translateX(-50%)' : 'none',
+            width: isSticky ? 'max-content' : '100%',
+            zIndex: 1000,
+            backgroundColor: 'white',
+            borderBottom: isSticky ? '1px solid #ccc' : 'none'
+        }}>
+                <Paginacion 
+                    totalElementos={libros.length} 
+                    elementosPorPagina={librosPorPagina} 
+                    paginaActual={currentPage} 
+                    cambiarPagina={handleChangePage} 
+                />
+            </div>
             <Box m={{ marginTop: 10 }}  sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
                     {librosActuales.map((libro) => {
@@ -47,12 +77,6 @@ function ListadoDeProductos(props) {
                     })}
                 </Grid>
             </Box>
-            <Paginacion 
-                totalElementos={libros.length} 
-                elementosPorPagina={librosPorPagina} 
-                paginaActual={currentPage} 
-                cambiarPagina={handleChangePage} 
-            />
         </div>
     )
 }

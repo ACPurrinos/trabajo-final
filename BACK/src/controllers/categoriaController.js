@@ -9,4 +9,4 @@ const getCategorias = async (req, res) => {
     }
 };
 
-module.exports = getCategorias; 
+module.exports = getCategorias;

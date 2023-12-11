@@ -9,6 +9,15 @@ import Footer from './components/Footer/Footer';
 import Detail from './Views/Detail';
 import Login from './Views/Login';
 import RegistroExitoso from './Views/RegistroExitoso';
+import PanelAdministrador from './components/PanelAdministrador/PanelAdministrador';
+import DashboardAdmin from './Views/DashboardAdmin';
+import FormCategoria from './components/FormCategoria/FormCategoria';
+import { Dashboard } from '@mui/icons-material';
+import ProductTable from './components/ProductTable/ProductTable';
+import VerCategorias from './components/Ver Categorias/VerCategorias';
+import EditProduct from './components/Editar Producto/EditProduct';
+import PATHROUTES from './helpers/PathRoutes.helper';
+
 
 function App() {
   const [librosFiltrados, setLibrosFiltrados] = useState([]);
@@ -16,7 +25,7 @@ function App() {
   const [filtroActual, setFiltroActual] = useState({ categoria: '', precio: 100000, ordenamiento: 'precio_desc' });
 
   useEffect(() => {
-    fetch('http://localhost:3000')
+    fetch('https://backtp-production.up.railway.app/')
       .then((response) => response.json())
       .then((data) => {
         setLibrosFiltrados(data);
@@ -35,7 +44,7 @@ function App() {
     queryParams += `precio=${filtroActual.precio}&`;
     queryParams += `ordenamiento=${filtroActual.ordenamiento}`;
 
-    fetch(`http://localhost:3000/?${queryParams}`)
+    fetch(`https://backtp-production.up.railway.app/?${queryParams}`)
       .then(response => response.json())
       .then(data => setLibrosFiltrados(data))
       .catch(error => console.error('Error:', error));
@@ -76,26 +85,80 @@ function App() {
       <CarritoProvider>
         <Navbar /> 
         <div style={{ padding: '100px'}}>
-          <Routes>
-            <Route path={"/"} element={
-              <>
-               
-                <Filtros 
-                  onFilterChange={handleFilterChange} 
-                  onPriceChange={onPriceChange}
-                  onSortChange={onSortChange} 
-                  precioMax={precioMax} 
-                />
-                {librosFiltrados.length > 0 ? 
-                  <ListadoDeProductos libros={librosFiltrados} /> :
-                  <MensajeSinLibros />
-                }
-              </>
-            } />
-            <Route path={'/detail/:id'} element={<Detail/>}/>
-            <Route path='/login' element={<Login/>}></Route>
-            <Route path={'registroexitoso'} element={<RegistroExitoso/>}></Route>
-          </Routes>
+        <Routes>
+          <Route path={"/"} element={
+            <>
+              
+              <Filtros 
+                onFilterChange={handleFilterChange} 
+                onPriceChange={onPriceChange}
+                onSortChange={onSortChange} 
+                precioMax={precioMax} 
+              />
+              {librosFiltrados.length > 0 ? 
+                <ListadoDeProductos libros={librosFiltrados} /> :
+                <MensajeSinLibros />
+              }
+              
+            </>
+          } />
+          <Route path={'/detail/:id'} element={<Detail />} />
+        <Route path={PATHROUTES.ADMINISTRADOR} element={<DashboardAdmin />} />
+
+        <Route path={PATHROUTES.FORMPRODUCTOS} 
+        element={
+          <>
+            <DashboardAdmin />
+            <PanelAdministrador />
+          </>
+        }
+        />
+
+        <Route
+          path={PATHROUTES.VERPRODUCTOS}
+          element={
+            <>
+              <DashboardAdmin />
+              <ProductTable />
+            </>
+          }
+        />
+
+        <Route
+          path={PATHROUTES.FORMCATEGORIA}
+          element={
+            <>
+              <DashboardAdmin />
+              <FormCategoria />
+            </>
+          }
+        />
+
+
+
+        <Route
+          path={PATHROUTES.VERCATEGORIAS}
+          element={
+            <>
+              <DashboardAdmin />
+              <VerCategorias />
+            </>
+          }
+        />
+
+        <Route
+          path={PATHROUTES.EDITARPRODUCTO}
+          element={
+            <>
+              <DashboardAdmin />
+              <EditProduct />
+            </>
+          }
+        />
+
+          <Route path='/login' element={<Login/>}></Route>
+          <Route path={'registroexitoso'} element={<RegistroExitoso/>}></Route>
+        </Routes>
         </div>
         <Footer/>
       </CarritoProvider>
