@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import { CarritoProvider } from './providers/carritoContext';
 import Navbar from './components/NavBar/NavBar';
 import ListadoDeProductos from './components/Listado de Productos/ListadoDeProductos';
-import SearchBar from './components/SearchBar/SearchBar';
 import Filtros from './components/Filtros/Filtros';
 import MensajeSinLibros from './components/Mensaje sin libros/MensajeSinLibros';
 import Footer from './components/Footer/Footer';

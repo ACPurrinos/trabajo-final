@@ -42,25 +42,31 @@ const Footer = () => {
     };
 
     return (
-        <Box component="footer" sx={{ bgcolor: '#2196F3', color: 'primary.main', mt: 3, py: 3, flexGrow: 1, boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.5)' }}>
+        <Box component="footer" sx={{ bgcolor: '#2196F3',
+                                      color: 'primary.main', 
+                                      mt: 3,
+                                      py: 3, 
+                                      flexGrow: 1, 
+                                      boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.5)'
+                                    }}>
             <Container maxWidth="false">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6}>
                         <Typography variant="h6" color="white" gutterBottom>
-                            BookFinder
+                           Grupo 2 DWA - Henry
                         </Typography>
                         <Typography variant="subtitle1" color="white">
-                            Tu sitio para encontrar y comprar libros en línea.
-                        </Typography>
+                            Edward Adalid Pereira, Andrea Purrinos, Valentina Paglino, Jorge Conti
+                                               </Typography>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <Typography variant="subtitle1" color="white">
                         ¿Tienes preguntas? Por favor, no dudes en contactarnos.
-                     </Typography>
-                        <Button onClick={handleOpen}  color="secondary" style={{ color: 'white' }}>
-                            Contacto
+                        </Typography>
+                        <Button onClick={handleOpen} color="secondary" style={{ color: 'white', display: 'flex', alignItems: 'center' }}>
+                            <MailOutlineIcon sx={{ fontSize: 28, marginRight: 4 }} /> Contacto
                         </Button>
-                     
+                      
                     </Grid>
                 </Grid>
             </Container>
@@ -73,6 +79,7 @@ const Footer = () => {
             >
                 <Box sx={modalStyle}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
+                        
                         <MailOutlineIcon /> Formulario de Contacto
                     </Typography>
                     <form onSubmit={handleSubmit}>
